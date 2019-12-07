@@ -33,11 +33,12 @@ int main()
     std::cout << std::endl;
 
     std::vector<uint8_t> ntfs_data(n);
+    uint8_t temp;
     for (int i=0;i<512;++i){
-        ntfs_data = (uint8_t)randomBytes[i];
+        ntfs_data[i] = uint8_t(int(randomBytes[i]));
     }
     NTFS* ntfs = new NTFS(ntfs_data);
-    ntfs->show_volume_info_test();
+    ntfs->show_volume_info();
     std::cout <<std::endl;
 
 

@@ -54,7 +54,6 @@ class NTFS{
         uint16_t get_end_sector_marker();
 
         void show_volume_info();
-        void show_volume_info_test();
 };
 
 

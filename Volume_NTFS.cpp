@@ -4,8 +4,8 @@ NTFS::NTFS(){}
 NTFS::~NTFS(){}
 
 NTFS::NTFS(const std::vector<uint8_t> &ntfs_boot_data){
-    if (ntfs_boot_data.size() != 512) return;
     int i;
+    if (ntfs_boot_data.size() != 512) return;
     for (i=0;i<3;++i){
         this->jump_instruction[i] = char(ntfs_boot_data[i]);
     }
@@ -135,7 +135,7 @@ uint16_t NTFS::get_end_sector_marker(){
 
 void NTFS::show_volume_info(){
     std::cout << std::setw(50) << std::setfill(' ') << "OEM ID:" << this->get_OEMID() << std::endl;
-    std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Volume Serial Number:" << (long long)(this->get_volume_serial_number()) << std::endl;
+    std::cout << std::setw(50) << std::setfill(' ') << "Volume Serial Number:" << (long long)(this->get_volume_serial_number()) << std::endl;
     std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Bytes Per sector:" << int(this->get_bytes_per_sector()) << std::endl;
     std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Sectors Per Cluster:" << int(this->get_sectors_per_cluster()) << std::endl;
     std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Media Descripts:" << int(this->get_media_descripter()) << std::endl;
@@ -148,18 +148,3 @@ void NTFS::show_volume_info(){
     std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Clusters Per Index Buffer:" << int(this->get_cluster_per_index_buffer()) << std::endl;
 }
 
-
-void NTFS::show_volume_info_test(){
-    std::cout << std::setw(50) << std::setfill(' ') << "OEM ID:" << this->get_OEMID() << std::endl;
-    std::cout << std::setw(50) << std::setfill(' ') << "Volume Serial Number:" << (long long)(this->get_volume_serial_number()) << std::endl;
-    std::cout << std::setw(50) << std::setfill(' ')  << "Bytes Per sector:" << int(this->get_bytes_per_sector()) << std::endl;
-    std::cout << std::setw(50) << std::setfill(' ')  << "Sectors Per Cluster:" << int(this->get_sectors_per_cluster()) << std::endl;
-    std::cout << std::setw(50) << std::setfill(' ')  << "Media Descripts:" << int(this->get_media_descripter()) << std::endl;
-    std::cout << std::setw(50) << std::setfill(' ')  << "Sectors Per Track:" << int(this->get_sectors_per_track()) << std::endl;
-    std::cout << std::setw(50) << std::setfill(' ')  << "Number Of Heads:" << int(this->get_number_of_heads()) << std::endl;
-    std::cout << std::setw(50) << std::setfill(' ')  << "Total Sectors:" << (long long)(this->get_total_sectors()) << std::endl;
-    std::cout << std::setw(50) << std::setfill(' ')  << "Logical Cluster Number for the file $MFT:" << (long long)(this->get_logical_cluster_number_MFT()) << std::endl;
-    std::cout << std::setw(50) << std::setfill(' ')  << "Logical Cluster Number for the file $MFTMirr:" << (long long)(this->get_logical_cluster_number_MFTMirr()) << std::endl;
-    std::cout << std::setw(50) << std::setfill(' ')  << "Clusters Per File Record Segment:" << int(this->get_clusters_per_file_record_segment()) << std::endl;
-    std::cout << std::setw(50) << std::setfill(' ')  << "Clusters Per Index Buffer:" << int(this->get_cluster_per_index_buffer()) << std::endl;
-}

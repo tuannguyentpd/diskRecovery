@@ -87,5 +87,10 @@ int main()
 
     std::cout << res << std::endl;
 
+    char a_='#';
+    uint8_t b_ = uint8_t(a_);
+    std::cout << b;
+    std::cout << std::endl;
+
     return 0;
 }

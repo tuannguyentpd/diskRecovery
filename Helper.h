@@ -12,4 +12,5 @@ void show_hex_data_dump(const std::vector<char>, const int);
 long int get_size_of_file(std::ifstream &);
 int dump_sector(std::ifstream &, std::vector<char> &, const int);
 
+
 #endif // !__HELPER_H__
