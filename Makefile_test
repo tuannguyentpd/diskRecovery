@@ -1,0 +1,30 @@
+CC = gcc
+PWD := $(shell pwd)
+CFLAGS = -fPIC
+LDFLAGS = -shared
+
+RM = rm -f
+
+#Cach 1: Build ra file main.so va main.o vi co main.h => lang phi 
+#SRCS := $(wildcard *.c)
+
+#Cach 2: Khong build ra file main.so va main.o vi khong ton tai file main.h 
+SRCS := $(wildcard *.h)
+OBJS := $(patsubst %.h,%.o,$(SRCS))
+TARGETS := $(patsubst %.h,%.so,$(SRCS))
+
+all: $(TARGETS) main
+
+#Cach 1: => Ket qua ??????
+#$(TARGETS): $(OBJS)
+#	$(CC) $(INC) $(LDFLAGS) $(CFLAGS) -o $@ $^
+
+#Cach 2: => Ket qua ??????
+%.so:%.o
+	$(CC) $(INC) $(LDFLAGS) $(CFLAGS) -o $@ $^
+
+main: main.c $(OBJS)
+	$(CC) -o $@ $^
+
+clean:
+	$(RM) $(PWD)/*.so $(PWD)/*.o main
