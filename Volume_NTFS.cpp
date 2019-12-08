@@ -135,7 +135,7 @@ uint16_t NTFS::get_end_sector_marker(){
 
 void NTFS::show_volume_info(){
     std::cout << std::setw(50) << std::setfill(' ') << "OEM ID:" << this->get_OEMID() << std::endl;
-    std::cout << std::setw(50) << std::setfill(' ') << "Volume Serial Number:" << (long long)(this->get_volume_serial_number()) << std::endl;
+    std::cout << std::setw(50) << std::setfill(' ') << std::hex << "Volume Serial Number:" << (long long)(this->get_volume_serial_number()) << std::endl;
     std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Bytes Per sector:" << int(this->get_bytes_per_sector()) << std::endl;
     std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Sectors Per Cluster:" << int(this->get_sectors_per_cluster()) << std::endl;
     std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Media Descripts:" << int(this->get_media_descripter()) << std::endl;
