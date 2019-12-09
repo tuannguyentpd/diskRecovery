@@ -11,7 +11,8 @@ OBJS := $(patsubst %.h,%.o,$(SRCS))
 #TARGETS := $(patsubst %.h,%.so,$(SRCS))
 
 #all: $(TARGETS) main
-all: main run_console_output
+#all: main run_console_output
+all: main run_redirect_ouput_to_file
 
 %.so:%.o
 #	$(CC) $(INC) $(LDFLAGS) $(CFLAGS) -o $@ $^

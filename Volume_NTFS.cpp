@@ -75,6 +75,9 @@ std::string NTFS::get_OEMID(){
     }
     return result;
 }
+uint32_t NTFS::get_pos_begin_LBA(){
+    return this->pos_begin_LBA;
+}
 uint16_t NTFS::get_bytes_per_sector(){
     return this->bytes_per_sector;
 }

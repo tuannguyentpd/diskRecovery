@@ -29,7 +29,12 @@ int main()
     ntfs->show_volume_info();
     std::cout << std::endl << std::endl;
 
-    
+    std::vector<char> MFT(512*ntfs->get_sectors_per_cluster());
+    for (int i=0;i<246;++i){
+        dump_random_data(file, MFT,ntfs->get_pos_begin_LBA() + ntfs->get_logical_cluster_number_MFT()*ntfs->get_sectors_per_cluster() + ntfs->get_sectors_per_cluster()*i, 512*ntfs->get_sectors_per_cluster());
+        std::cout << std::endl << std::endl << "MFT - Hex data - cluster " << std::dec << i << ": " << std::endl;
+        show_hex_data_dump(MFT, ntfs->get_pos_begin_LBA() + ntfs->get_logical_cluster_number_MFT()*ntfs->get_sectors_per_cluster()+ ntfs->get_sectors_per_cluster()*i);
+    }
 
     std::cout << std::endl;
     file.close();

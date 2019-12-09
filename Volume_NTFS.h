@@ -40,6 +40,7 @@ class NTFS{
 
     public:  
         std::string get_OEMID();
+        uint32_t get_pos_begin_LBA();
         uint16_t get_bytes_per_sector();
         uint8_t get_sectors_per_cluster();
         uint16_t get_reserved_sector();
