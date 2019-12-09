@@ -68,3 +68,18 @@ long int get_size_of_file(std::ifstream &f){
     f.seekg(seek_cur);
     return size;
 }
+
+bool covert_char_vec_to_uint8_vec(const std::vector<char> &src, std::vector<uint8_t> des){
+    if (src.size() != des.size()) return false;
+    for (int i=0;i<src.size();++i){
+        des[i] = src[i];
+    }
+    return true;
+}
+
+void show_hex_data_sector_uint8(const std::vector<uint8_t> &sector_data){
+    for(int i=0;i<sector_data.size();++i){
+        if (i%16 == 0) std::cout <<std::endl;
+        std::cout << std::hex << sector_data[i] << " ";
+    }
+}

@@ -11,6 +11,7 @@
 
 class NTFS{
     private:
+        uint32_t pos_begin_LBA;
         char jump_instruction[3];
         char OEM_ID[8];       
         uint16_t bytes_per_sector;
@@ -32,8 +33,9 @@ class NTFS{
     public:
         NTFS();
         ~NTFS();
-        NTFS(const std::vector<uint8_t> &ntfs_boot_data);
         NTFS(const NTFS &ntfs);
+        NTFS(const std::vector<uint8_t> &ntfs_boot_data);
+        NTFS(std::ifstream &f, const uint32_t &pos_LBA);
         NTFS& operator=(const NTFS &ntfs);
 
     public:  
@@ -54,6 +56,7 @@ class NTFS{
         uint16_t get_end_sector_marker();
 
         void show_volume_info();
+        void set_attrs_from_boot_sector(const std::vector<uint8_t> &boot_sector);
 };
 
 

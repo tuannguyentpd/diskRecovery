@@ -11,7 +11,7 @@ OBJS := $(patsubst %.h,%.o,$(SRCS))
 #TARGETS := $(patsubst %.h,%.so,$(SRCS))
 
 #all: $(TARGETS) main
-all: main
+all: main run_console_output
 
 %.so:%.o
 #	$(CC) $(INC) $(LDFLAGS) $(CFLAGS) -o $@ $^
@@ -19,6 +19,12 @@ all: main
 
 main: main.cpp $(OBJS)
 	$(CC) -o $@ $^
+
+run_redirect_ouput_to_file:
+	sudo ./main > manual_data.txt
+
+run_console_output:
+	sudo ./main
 
 clean:
 	$(RM) $(PWD)/*.so $(PWD)/*.o main
