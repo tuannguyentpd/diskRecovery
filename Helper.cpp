@@ -6,7 +6,7 @@ void set_code_mapping_type_fs(std::map<uint8_t, std::string> &code_mapping_type_
     }
 }
 
-void show_hex_data_dump(const std::vector<char> data,const int sector_range){
+void show_hex_data_dump(const std::vector<char> data,const int &sector_range){
     int count = 0;
 
     std::cout << "_________________|__";
@@ -35,13 +35,24 @@ void show_hex_data_dump(const std::vector<char> data,const int sector_range){
     }
 }
 
-int dump_sector(std::ifstream &f, std::vector<char> &data,const int sector_range){
+int dump_sector(std::ifstream &f, std::vector<char> &data,const int &sector_range){
     if (!f){
         std::cout << "File error! Dump sector error.\n";
         return -1;
     }
     f.seekg(sector_range*512);
     f.read(&data[0], 512);
+    return 1;
+}
+
+
+int dump_random_data(std::ifstream &f, std::vector<char> &data, const int&sector_range, const int&num_bytes){
+    if (!f){
+        std::cout << "File error! Dump sector error.\n";
+        return -1;
+    }
+    f.seekg(sector_range*512);
+    f.read(&data[0], num_bytes);
     return 1;
 }
 
@@ -56,4 +67,19 @@ long int get_size_of_file(std::ifstream &f){
     size = f.tellg();
     f.seekg(seek_cur);
     return size;
+}
+
+bool covert_char_vec_to_uint8_vec(const std::vector<char> &src, std::vector<uint8_t> des){
+    if (src.size() != des.size()) return false;
+    for (int i=0;i<src.size();++i){
+        des[i] = src[i];
+    }
+    return true;
+}
+
+void show_hex_data_sector_uint8(const std::vector<uint8_t> &sector_data){
+    for(int i=0;i<sector_data.size();++i){
+        if (i%16 == 0) std::cout <<std::endl;
+        std::cout << std::hex << sector_data[i] << " ";
+    }
 }
