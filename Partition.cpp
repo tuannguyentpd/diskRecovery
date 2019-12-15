@@ -59,9 +59,9 @@ Partition::Partition(const std::vector<uint8_t> &partition_data){
     this->head_end = uint8_t(partition_data[5]);
     this->sector_and_cylinder_end_part_1 = uint8_t(partition_data[6]);
     this->sector_and_cylinder_end_part_2 = uint8_t(partition_data[7]);
-    this->pos_begin_LBA = uint32_t((((((partition_data[11]<<8)+partition_data[10])<<8)+partition_data[9])<<8)+partition_data[8]);
-    this->num_sector_total = uint32_t((((((partition_data[15]<<8)+partition_data[14])<<8)+partition_data[13])<<8)+partition_data[12]);
-    this-> finish_sign = uint16_t((partition_data[16]<<8)+partition_data[17]);
+    this->pos_begin_LBA = uint32_t((((((partition_data[11]<<8)|partition_data[10])<<8)|partition_data[9])<<8)|partition_data[8]);
+    this->num_sector_total = uint32_t((((((partition_data[15]<<8)|partition_data[14])<<8)|partition_data[13])<<8)|partition_data[12]);
+    this-> finish_sign = uint16_t((partition_data[16]<<8)|partition_data[17]);
 }
 Partition::Partition(const Partition &partition){
     this->active = partition.active;
