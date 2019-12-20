@@ -66,6 +66,13 @@ class FAT{
         uint32_t get_begin_sector_RDET();
         uint32_t get_begin_sector_FAT_table();
         uint32_t get_begin_sector_data_area();
+        /*
+        ** Chu y: thu tu cluster cua vung data bat dau tu 2
+        ** Sector bat dau cua file/thu muc
+        ** S = Sb + Sf*Nf * + [Srdet] + (k-2)*Sc 
+        ** hoac S = begin_sector_data_area + (k-2)*sectors_per_cluster
+        ** voi k la cluster bat dau cua file/directory
+        */
 
         void show_volume_info();
         void set_attrs_from_boot_sector(const std::vector<uint8_t> &fat_boot_data);

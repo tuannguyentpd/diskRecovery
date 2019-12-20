@@ -146,10 +146,10 @@ uint16_t FAT::get_end_sector_marker(){
 }
 uint32_t FAT::get_RDET_size() //sector
 {
-    return (this->get_entries_of_RDET()*32)/512;
+    return (this->get_entries_of_RDET()*32)/this->get_bytes_per_sector();
 }
 uint32_t FAT::get_begin_sector_RDET(){
-    return this->get_sectors_before_FAT_table()+this->get_sectors_of_FAT()*2;
+    return this->get_sectors_before_FAT_table()+this->get_sectors_of_FAT()*this->get_num_FAT_table();
 }
 uint32_t FAT::get_begin_sector_FAT_table(){
     return this->get_sectors_before_FAT_table();

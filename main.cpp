@@ -43,13 +43,23 @@ int main()
     fat->show_volume_info();
     std::cout << std::endl << std::endl;
 
-    std::vector<char> RDET_hex_data(fat->get_RDET_size()*512);
-    dump_random_data(file, RDET_hex_data, fat->get_begin_sector_RDET(), fat->get_RDET_size()*512);
+
+    std::vector<char> RDET_hex_data(5*512);
+    dump_random_data(file, RDET_hex_data, fat->get_begin_sector_RDET(), 5*512);
     show_hex_data_dump(RDET_hex_data, fat->get_begin_sector_RDET());
     std::cout << std::endl << std::endl;
 
+    dump_random_data(file, randomBytes, fat->get_begin_sector_data_area()+(9973-2)*2, 512);
+    show_hex_data_dump(randomBytes, fat->get_begin_sector_data_area()+(9973-2)*2);
+    std::cout << std::endl << std::endl;
+
+    // std::vector<char> RDET_hex_data(fat->get_RDET_size()*512);
+    // dump_random_data(file, RDET_hex_data, fat->get_begin_sector_RDET(), fat->get_RDET_size()*512);
+    // show_hex_data_dump(RDET_hex_data, fat->get_begin_sector_RDET());
+    // std::cout << std::endl << std::endl;
+
 /*
-    file.seekg(4243*2*512);
+    file.seekg((fat->get_begin_sector_data_area()+(9-2)*2)*512);
     std::ofstream f("LearningVocabEnglish.pdf", std::ios::binary|std::ios::out);
     char hexbyte;
     for (int i=0;i<4338849;++i){
