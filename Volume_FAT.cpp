@@ -144,10 +144,23 @@ std::string FAT::get_FAT_type(){
 uint16_t FAT::get_end_sector_marker(){
     return this->end_sector_marker;
 }
+uint32_t FAT::get_RDET_size() //sector
+{
+    return (this->get_entries_of_RDET()*32)/512;
+}
+uint32_t FAT::get_begin_sector_RDET(){
+    return this->get_sectors_before_FAT_table()+this->get_sectors_of_FAT()*2;
+}
+uint32_t FAT::get_begin_sector_FAT_table(){
+    return this->get_sectors_before_FAT_table();
+}
+uint32_t FAT::get_begin_sector_data_area(){
+    return this->get_begin_sector_RDET()+this->get_RDET_size();
+}
 
 
 void FAT::show_volume_info(){
-    std::cout << std::setw(50) << std::setfill(' ') << "OEM ID:" << this->get_OEMID() << std::endl;
+    std::cout << std::setw(50) << std::setfill(' ') << std::left << "OEM ID:" << this->get_OEMID() << std::endl;
     std::cout << std::setw(50) << std::setfill(' ') << "Volume label:" << this->get_volume_label() << std::endl;
     std::cout << std::setw(50) << std::setfill(' ') << "FAT type:" << this->get_FAT_type() << std::endl;
     std::cout << std::setw(50) << std::setfill(' ') << std::hex << "Volume Serial Number:" << (int)(this->get_volume_serial_number()) << std::endl;
@@ -156,8 +169,16 @@ void FAT::show_volume_info(){
     std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Sectors Per Track:" << int(this->get_sectors_per_track()) << std::endl;
     std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Number Of Heads:" << int(this->get_number_of_heads()) << std::endl;
     std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Distance_vol_describe_to_vol_begin:" << int(this->get_distance_vol_describe_to_vol_begin()) << std::endl;
+    std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Volume size:" << int(this->get_volume_size()) << std::endl;
     std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Sectors of FAT:" << int(this->get_sectors_of_FAT()) << std::endl;
     std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Sector of volume:" << int(this->get_sectors_of_volume()) << std::endl;
+    std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Sector before FAT table:" << int(this->get_sectors_before_FAT_table()) << std::endl;
+    std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Number of FAT tables:" << int(this->get_num_FAT_table()) << std::endl;
+    std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Entries of RDET:" << int(this->get_entries_of_RDET()) << std::endl;
+    std::cout << std::setw(50) << std::setfill(' ') << std::dec << "RDET size:" << int(this->get_RDET_size()) << std::endl;
+    std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Begin sector of FAT table:" << int(this->get_begin_sector_FAT_table()) << std::endl;
+    std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Begin sector of RDET:" << int(this->get_begin_sector_RDET()) << std::endl;
+    std::cout << std::setw(50) << std::setfill(' ') << std::dec << "Begin sector of data area:" << int(this->get_begin_sector_data_area()) << std::endl;
 }
 void FAT::set_attrs_from_boot_sector(const std::vector<uint8_t> &fat_boot_data){
     int i;

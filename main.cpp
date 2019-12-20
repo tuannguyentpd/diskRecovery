@@ -25,7 +25,13 @@ int main()
     covert_char_vec_to_uint8_vec(randomBytes, boot_sector_data);
     FAT *fat = new FAT(boot_sector_data);
     fat->show_volume_info();
+    std::cout << std::endl << std::endl;
 
+    dump_random_data(file, randomBytes, fat->get_begin_sector_RDET(), 512);
+    show_hex_data_dump(randomBytes, fat->get_begin_sector_RDET());
+    std::cout << std::endl << std::endl;
+    dump_random_data(file, randomBytes, fat->get_begin_sector_data_area(), 512);
+    show_hex_data_dump(randomBytes, fat->get_begin_sector_data_area());
 
 /*
     Disk* disk = new Disk(randomBytes);

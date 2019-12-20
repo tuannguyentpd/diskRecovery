@@ -62,6 +62,10 @@ class FAT{
         char get_volume_label();
         std::string get_FAT_type();
         uint16_t get_end_sector_marker();
+        uint32_t get_RDET_size(); //sector
+        uint32_t get_begin_sector_RDET();
+        uint32_t get_begin_sector_FAT_table();
+        uint32_t get_begin_sector_data_area();
 
         void show_volume_info();
         void set_attrs_from_boot_sector(const std::vector<uint8_t> &fat_boot_data);
