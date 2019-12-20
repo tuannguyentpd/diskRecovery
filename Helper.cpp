@@ -69,7 +69,7 @@ long int get_size_of_file(std::ifstream &f){
     return size;
 }
 
-bool covert_char_vec_to_uint8_vec(const std::vector<char> &src, std::vector<uint8_t> des){
+bool covert_char_vec_to_uint8_vec(const std::vector<char> &src, std::vector<uint8_t> &des){
     if (src.size() != des.size()) return false;
     for (int i=0;i<src.size();++i){
         des[i] = src[i];
