@@ -1,9 +1,14 @@
 #include"Volume_FAT.h"
 
-FAT::FAT(){}
-FAT::~FAT(){}
+FAT::FAT(){
+    this->helper = new Helper;
+}
+FAT::~FAT(){
+    delete this->helper;
+}
 
 FAT::FAT(const FAT &fat){
+    this->helper = new Helper;
     int i;
     this->pos_begin_LBA = fat.pos_begin_LBA;
     for (i=0;i<3;++i){
@@ -34,18 +39,21 @@ FAT::FAT(const FAT &fat){
     this->end_sector_marker = fat.end_sector_marker;
 }
 FAT::FAT(const std::vector<uint8_t> &fat_boot_data){
+    this->helper = new Helper;
     this->set_attrs_from_boot_sector(fat_boot_data);
 }
 FAT::FAT(std::ifstream &f, const uint32_t &pos_LBA){
+    this->helper = new Helper;
     this->pos_begin_LBA = pos_LBA;
     std::vector<char> ntfs_boot_data(512);
-    dump_sector(f, ntfs_boot_data, this->pos_begin_LBA);
+    this->helper->dump_sector(f, ntfs_boot_data, this->pos_begin_LBA);
     std::vector<uint8_t> boot_sector(512);
     for (int i=0;i<512;++i)
         boot_sector[i] = ntfs_boot_data[i];
     this->set_attrs_from_boot_sector(boot_sector);
 }
 FAT& FAT::operator=(const FAT &fat){
+    this->helper = new Helper;
     int i;
     this->pos_begin_LBA = fat.pos_begin_LBA;
     for (i=0;i<3;++i){
@@ -74,6 +82,8 @@ FAT& FAT::operator=(const FAT &fat){
         this->FAT_type[i] = fat.FAT_type[i];
     }
     this->end_sector_marker = fat.end_sector_marker;
+
+    return *this;
 }
 
 std::string FAT::get_OEMID(){

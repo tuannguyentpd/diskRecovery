@@ -1,12 +1,18 @@
 #include"Volume_NTFS.h"
 
-NTFS::NTFS(){}
-NTFS::~NTFS(){}
+NTFS::NTFS(){
+    this->helper = new Helper;
+}
+NTFS::~NTFS(){
+    delete this->helper;
+}
 
 NTFS::NTFS(const std::vector<uint8_t> &ntfs_boot_data){
+    this->helper = new Helper;
     this->set_attrs_from_boot_sector(ntfs_boot_data);
 }
 NTFS::NTFS(const NTFS &ntfs){
+    this->helper = new Helper;
     int i;
     for (i=0;i<3;++i){
         this->jump_instruction[i] = ntfs.jump_instruction[i];
@@ -33,15 +39,17 @@ NTFS::NTFS(const NTFS &ntfs){
     this->end_sector_marker = ntfs.end_sector_marker;
 }
 NTFS::NTFS(std::ifstream &f, const uint32_t &pos_LBA){
+    this->helper = new Helper;
     this->pos_begin_LBA = pos_LBA;
     std::vector<char> ntfs_boot_data(512);
-    dump_sector(f, ntfs_boot_data, this->pos_begin_LBA);
+    this->helper->dump_sector(f, ntfs_boot_data, this->pos_begin_LBA);
     std::vector<uint8_t> boot_sector(512);
     for (int i=0;i<512;++i)
         boot_sector[i] = ntfs_boot_data[i];
     this->set_attrs_from_boot_sector(boot_sector);
 }
 NTFS& NTFS::operator=(const NTFS &ntfs){
+    this->helper = new Helper;
     int i;
     for (i=0;i<3;++i){
         this->jump_instruction[i] = ntfs.jump_instruction[i];
@@ -66,6 +74,8 @@ NTFS& NTFS::operator=(const NTFS &ntfs){
         this->checksum[i] = ntfs.checksum[i];
     }
     this->end_sector_marker = ntfs.end_sector_marker;
+
+    return *this;
 }
 
 std::string NTFS::get_OEMID(){

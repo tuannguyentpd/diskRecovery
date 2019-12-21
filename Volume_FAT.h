@@ -12,6 +12,7 @@
 
 class FAT{
     private:
+        Helper *helper;
         uint32_t pos_begin_LBA;
         char jump_instruction[3];
         char OEM_ID[8];       
