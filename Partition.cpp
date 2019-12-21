@@ -87,7 +87,9 @@ Partition& Partition::operator=(const Partition& partition){
     this->sector_and_cylinder_end_part_2 = partition.sector_and_cylinder_end_part_2;
     this->pos_begin_LBA = partition.pos_begin_LBA;
     this->num_sector_total = partition.num_sector_total;
-    this->finish_sign = partition.finish_sign;            
+    this->finish_sign = partition.finish_sign;
+
+    return *this;            
 }
 
 void Partition::set_active(uint8_t act){

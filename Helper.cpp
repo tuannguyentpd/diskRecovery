@@ -1,12 +1,16 @@
 #include"Helper.h"
 
-void set_code_mapping_type_fs(std::map<uint8_t, std::string> &code_mapping_type_fs, const std::vector<uint8_t> &code, const std::vector<std::string> &type_fs){
+
+Helper::Helper(){}
+Helper::~Helper(){}
+
+void Helper::set_code_mapping_type_fs(std::map<uint8_t, std::string> &code_mapping_type_fs, const std::vector<uint8_t> &code, const std::vector<std::string> &type_fs){
     for (int i=0;i< code.size();++i){
         code_mapping_type_fs[code[i]] = type_fs[i]; 
     }
 }
 
-void show_hex_data_dump(const std::vector<char> data,const int &sector_range){
+void Helper::show_hex_data_dump(const std::vector<char> data,const int &sector_range){
     int count = 0;
 
     std::cout << "_________________|__";
@@ -35,7 +39,7 @@ void show_hex_data_dump(const std::vector<char> data,const int &sector_range){
     }
 }
 
-int dump_sector(std::ifstream &f, std::vector<char> &data,const int &sector_range){
+int Helper::dump_sector(std::ifstream &f, std::vector<char> &data,const int &sector_range){
     if (!f){
         std::cout << "File error! Dump sector error.\n";
         return -1;
@@ -45,8 +49,7 @@ int dump_sector(std::ifstream &f, std::vector<char> &data,const int &sector_rang
     return 1;
 }
 
-
-int dump_random_data(std::ifstream &f, std::vector<char> &data, const int&sector_range, const int&num_bytes){
+int Helper::dump_random_data(std::ifstream &f, std::vector<char> &data, const int&sector_range, const int&num_bytes){
     if (!f){
         std::cout << "File error! Dump sector error.\n";
         return -1;
@@ -56,7 +59,7 @@ int dump_random_data(std::ifstream &f, std::vector<char> &data, const int&sector
     return 1;
 }
 
-long int get_size_of_file(std::ifstream &f){
+long int Helper::get_size_of_file(std::ifstream &f){
     if (!f){
         std::cout << "File error! Could not get size of file.\n";
         return -1;
@@ -69,7 +72,7 @@ long int get_size_of_file(std::ifstream &f){
     return size;
 }
 
-bool covert_char_vec_to_uint8_vec(const std::vector<char> &src, std::vector<uint8_t> des){
+bool Helper::covert_char_vec_to_uint8_vec(const std::vector<char> &src, std::vector<uint8_t> &des){
     if (src.size() != des.size()) return false;
     for (int i=0;i<src.size();++i){
         des[i] = src[i];
@@ -77,7 +80,7 @@ bool covert_char_vec_to_uint8_vec(const std::vector<char> &src, std::vector<uint
     return true;
 }
 
-void show_hex_data_sector_uint8(const std::vector<uint8_t> &sector_data){
+void Helper::show_hex_data_sector_uint8(const std::vector<uint8_t> &sector_data){
     for(int i=0;i<sector_data.size();++i){
         if (i%16 == 0) std::cout <<std::endl;
         std::cout << std::hex << sector_data[i] << " ";

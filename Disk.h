@@ -19,6 +19,7 @@ class Disk{
         std::vector<uint8_t> null_area;
         std::vector<Partition*> partitions_entry;
         std::vector<uint8_t> MBR_signature;
+        Helper *helper;
 
     public:
         std::map<uint8_t, std::string> code_mapping_type_fs;

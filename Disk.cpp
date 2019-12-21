@@ -4,8 +4,12 @@
 std::vector<uint8_t> code{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0f, 0x65, 0x66, 0x81, 0x85, 0x8a, 0x93, 0xa0,0xa3, 0xa8, 0xbe, 0xc3, 0xdb, 0xec, 0xf9, 0xfa, 0xff};
 std::vector<std::string> type_fs{"DOS 12-bit FAT", "XENIX root", "EXNIX /usr", "DOS 3.0+ 16bit FAT", "Extended Partition", "DOS 3.1+ 16bit FAT", "OS/2 IFS", "OS/2 (v1.0-1.3 only", "AIX data partition", "OS2 Boot Manager", "WIN95 FAT32", "WIN92 FAT32, LBA mapped", "Extended Partition - BIOS", "Novell Netware 386", "Novell Netware SMS", "MINIX", "Linux extended", "Linux kernel", "Hidden Linux native", "Laptop hibernation", "HP volume Expansion", "Mac OS-X", "Solaris 8 boot", "Hidden Linux swap", "CP/M", "SkyOS SkyFS", "pCache", "Bochs", "Xenix Bad Block table"};
 
-Disk::Disk(){}
-Disk::~Disk(){}
+Disk::Disk(){
+    this->helper = new Helper;
+}
+Disk::~Disk(){
+    delete this->helper;
+}
 
 Partition* Disk::get_partition_entry(const int &idx){
     if (idx<0 || idx>3) return this->partitions_entry[0];
@@ -44,6 +48,7 @@ void Disk::show_partition_info(){
 }
 
 Disk::Disk(const std::vector<char> &master_boot_record_data){
+    this->helper = new Helper;
     int i = 0;
     for (i=0;i<440;++i){
         this->code_erea.push_back(master_boot_record_data[i]);
@@ -75,5 +80,5 @@ Disk::Disk(const std::vector<char> &master_boot_record_data){
     this->MBR_signature.push_back(master_boot_record_data[510]);
     this->MBR_signature.push_back(master_boot_record_data[511]);
 
-    set_code_mapping_type_fs(this->code_mapping_type_fs, code, type_fs);
+    this->helper->set_code_mapping_type_fs(this->code_mapping_type_fs, code, type_fs);
 }
