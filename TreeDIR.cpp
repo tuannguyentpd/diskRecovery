@@ -21,7 +21,7 @@ TreeDIR::TreeDIR(const string &name, const char& type_,const uint32_t& clusterBe
     :Component(name, type_, clusterBegin, size_){
         this->helper = new Helper();
 }
-TreeDIR::TreeDIR(const string &name, const char& type_,const uint32_t& clusterBegin, const uint32_t &size_, const uint32_t &rank_, std::ifstream &f, const uint32_t& idxSector)
+TreeDIR::TreeDIR(const string &name, const char& type_,const uint32_t& clusterBegin, const uint32_t &size_, const uint32_t &rank_, std::ifstream &f, const uint32_t& idxSector, const uint32_t& bytesPerSector, const uint32_t& beginSectorArea, const uint32_t& sectorPerCluster)
     :Component(name, type_, clusterBegin, size_, rank_){
     this->helper = new Helper();
 
@@ -30,11 +30,13 @@ TreeDIR::TreeDIR(const string &name, const char& type_,const uint32_t& clusterBe
     uint32_t indexClusterBegin_temp = 0;
     uint32_t size_temp = 0;
     uint32_t rank_temp = 0;
-    uint32_t idxSector_temp = idxSector;
+    uint32_t idxBytes_temp = idxSector*bytesPerSector;
+    uint32_t idxSector_temp = 0;
 
     std::vector<char> ext_entries;
     std::vector<char> entry(32);
-    this->helper->dump_random_data(f, entry, idxSector_temp, 32);
+    f.seekg(idxBytes_temp);
+    f.read(&entry[0], 32);
     int i, j;
     int count = 0;
     while (this->vectorIsEmpty(entry)==false)
@@ -76,19 +78,38 @@ TreeDIR::TreeDIR(const string &name, const char& type_,const uint32_t& clusterBe
             rank_temp = rank + 1;
             indexClusterBegin_temp = uint32_t((((((entry[21]<<8)|entry[20])<<8)|entry[27])<<8)|entry[26]);
             size_temp = uint32_t((((((entry[31]<<8)|entry[30])<<8)|entry[29])<<8)|entry[28]);
+            idxSector_temp = beginSectorArea + (indexClusterBegin_temp - 2)*sectorPerCluster;
 
             if (type_temp == 0x10){
-                
+                if (name_temp == ".." || name_temp == "." || name_temp == "..."){
+                    // std::cout << "New file instead of folder. File name: " << name_temp << " - sectorBegin: " << idxSector_temp << std::endl;
+                    Component* file = new File(name_temp, type_temp, indexClusterBegin_temp, size_temp, rank_temp);
+                    this->files.push_back(file);
+                }
+                else{
+                    // std::cout << "Create Folder name: " << name_temp << " - sectorBegin: " << idxSector_temp << std::endl;
+                    // std::vector<char> RDET_hex_data(bytesPerSector);
+                    // helper->dump_random_data(f, RDET_hex_data, idxSector_temp, bytesPerSector);
+                    // helper->show_hex_data_dump(RDET_hex_data, idxSector_temp);
+                    // std::cout << std::endl << std::endl;
+                    // return;
+
+                    Component* folder = new TreeDIR(name_temp, type_, indexClusterBegin_temp, size_temp, rank_temp, f, idxSector_temp, bytesPerSector, beginSectorArea, sectorPerCluster);
+                    this->files.push_back(folder);
+                }
             }
             else{
+                // std::cout << "New file\n";
                 Component* file = new File(name_temp, type_temp, indexClusterBegin_temp, size_temp, rank_temp);
                 this->files.push_back(file);
             }
         }
+        idxBytes_temp += 32;
+        f.seekg(idxBytes_temp);
         f.read(&entry[0], 32);
         
         ++count;
-        if (count == 7) // Max 512 -> so entry cua RDET
+        if (count == 50) // Max 512 -> so entry cua RDET
             return;
     }
     

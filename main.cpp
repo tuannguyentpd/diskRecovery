@@ -34,7 +34,7 @@ int main()
     // std::cout << std::endl << std::endl;
 
 
-    TreeDIR *treeDir = new TreeDIR(".", 'd', fat->get_begin_sector_RDET(), 0, 0, file, fat->get_begin_sector_RDET());
+    TreeDIR *treeDir = new TreeDIR(".", 'd', fat->get_begin_sector_RDET(), 0, 0, file, fat->get_begin_sector_RDET(), fat->get_bytes_per_sector(), fat->get_begin_sector_data_area(), fat->get_sectors_per_cluster());
 
     std::cout << "Num items : " << treeDir->getNumItems() << std::endl;
     treeDir->show();
@@ -47,8 +47,9 @@ int main()
     // helper->show_hex_data_dump(RDET_hex_data, fat->get_begin_sector_RDET());
     // std::cout << std::endl << std::endl;
 
-    // helper->dump_random_data(file, RDET_hex_data, fat->get_begin_sector_data_area()+(8481-2)*fat->get_sectors_per_cluster(), fat->get_RDET_size()*fat->get_bytes_per_sector());
-    // helper->show_hex_data_dump(RDET_hex_data, fat->get_begin_sector_data_area()+(8481-2)*fat->get_sectors_per_cluster());
+    // std::vector<char> RDET_hex_data(fat->get_bytes_per_sector());
+    // helper->dump_random_data(file, RDET_hex_data, 17398, fat->get_bytes_per_sector());
+    // helper->show_hex_data_dump(RDET_hex_data, 17398);
     // std::cout << std::endl << std::endl;
 
 

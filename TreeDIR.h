@@ -12,6 +12,8 @@
 #include"Component.h"
 #include "File.h"
 
+#include "Volume_FAT.h"
+
 using namespace std;
 
 
@@ -26,7 +28,7 @@ class TreeDIR: public Component {
         TreeDIR(const uint32_t&);
         TreeDIR(const vector<char> &rDET);
         TreeDIR(const string &name, const char& type_,const uint32_t& clusterBegin, const uint32_t &size_);
-        TreeDIR(const string &name, const char& type_,const uint32_t& clusterBegin, const uint32_t &size_, const uint32_t& rank_, std::ifstream &f, const uint32_t& idxSector);
+        TreeDIR(const string &name, const char& type_,const uint32_t& clusterBegin, const uint32_t &size_, const uint32_t& rank_, std::ifstream &f, const uint32_t& idxSector, const uint32_t& bytesPerSector, const uint32_t& beginSectorArea, const uint32_t& sectorPerCluster);
     public:
         void show();
         void add(Component*);
