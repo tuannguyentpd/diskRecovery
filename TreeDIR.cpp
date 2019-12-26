@@ -38,7 +38,7 @@ TreeDIR::TreeDIR(const string &name, const char& type_,const uint32_t& clusterBe
     f.seekg(idxBytes_temp);
     f.read(&entry[0], 32);
     int i, j;
-    int count = 0;
+    // int count = 0;
     while (this->vectorIsEmpty(entry)==false)
     {
         if (entry[11]==0x0f){//Entry phu
@@ -55,7 +55,7 @@ TreeDIR::TreeDIR(const string &name, const char& type_,const uint32_t& clusterBe
                     if (isgraph(entry[i]))
                         name_temp += entry[i];
                 }
-                if (entry[11]!=0x0f){
+                if (entry[11]!=0x10){
                     name_temp += '.';
                     for (i=8;i<11;++i){
                     if (isgraph(entry[i]))
@@ -68,7 +68,7 @@ TreeDIR::TreeDIR(const string &name, const char& type_,const uint32_t& clusterBe
                 // std::cout << "Co entry phu" << std::endl;
                 for (i=ext_entries.size()/31-1;i>=0;--i){
                     for (j=0;j<31;++j){
-                        if (isgraph(ext_entries[31*i+j]))
+                        if (j!=12 && isgraph(ext_entries[31*i+j]))
                             name_temp += ext_entries[31*i+j];
                     }
                 }
@@ -81,7 +81,7 @@ TreeDIR::TreeDIR(const string &name, const char& type_,const uint32_t& clusterBe
             idxSector_temp = beginSectorArea + (indexClusterBegin_temp - 2)*sectorPerCluster;
 
             if (type_temp == 0x10){
-                if (name_temp == ".." || name_temp == "." || name_temp == "..."){
+                if (name_temp == ".." || name_temp == "."){
                     // std::cout << "New file instead of folder. File name: " << name_temp << " - sectorBegin: " << idxSector_temp << std::endl;
                     Component* file = new File(name_temp, type_temp, indexClusterBegin_temp, size_temp, rank_temp);
                     this->files.push_back(file);
@@ -108,9 +108,9 @@ TreeDIR::TreeDIR(const string &name, const char& type_,const uint32_t& clusterBe
         f.seekg(idxBytes_temp);
         f.read(&entry[0], 32);
         
-        ++count;
-        if (count == 50) // Max 512 -> so entry cua RDET
-            return;
+        // ++count;
+        // if (count == 50) // Max 512 -> so entry cua RDET
+        //     return;
     }
     
 }

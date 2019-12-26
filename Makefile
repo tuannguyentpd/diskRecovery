@@ -12,8 +12,8 @@ TARGETS := $(patsubst %.h,%.so,$(SRCS))
 #all: $(TARGETS) main
 #all: main CPPlib.so run_console_output
 #all: main CPPlib.so run_redirect_ouput_to_file
-# all: main run_redirect_ouput_to_file
-all: main run_console_output
+all: main run_redirect_ouput_to_file
+#all: main run_console_output
 
 %.so:%.o
 	$(CC) $(INC) $(LDFLAGS) $(CFLAGS) -o $@ $^
