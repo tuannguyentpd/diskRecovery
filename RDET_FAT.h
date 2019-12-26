@@ -30,7 +30,7 @@ class RDET_FAT{
         RDET_FAT(const std::vector<uint8_t> &rdet_fat_entry);
         RDET_FAT& operator=(const RDET_FAT &rdet_fat_entry);
     public:
-        void set_ful_name(std::string fname);
+        void set_full_name(std::string fname);
 };
 
 

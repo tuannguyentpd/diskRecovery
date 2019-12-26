@@ -8,6 +8,6 @@ RDET_FAT& RDET_FAT::operator=(const RDET_FAT &rdet_fat_entry){
     return *this;
 }
 
-void RDET_FAT::set_ful_name(std::string fname){
+void RDET_FAT::set_full_name(std::string fname){
     this->full_name = fname;
 }
