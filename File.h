@@ -19,6 +19,11 @@ class File: public Component {
         File(const string &name, const char& type_,const uint32_t& clusterBegin, const uint32_t &size_,const uint32_t &rank_);
     public:
         void show();
+        void listFile();
+        vector<Component*> getListFileWithExt(const std::string&);
+        vector<Component*> getListDeletedFileWithExt(const std::string&);
+        vector<Component*> getAllFiles();
+        vector<Component*> getListDeletedFile();
 };
 
 #endif

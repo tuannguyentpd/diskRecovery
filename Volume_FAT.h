@@ -8,6 +8,7 @@
 #include<string>
 
 #include"Helper.h"
+#include "TreeDIR.h"
 
 
 class FAT{
@@ -34,12 +35,13 @@ class FAT{
         char volume_label;
         char FAT_type[8];
         uint16_t end_sector_marker;
+        TreeDIR *treeDir;
 
     public:
         FAT();
         ~FAT();
         FAT(const FAT &fat);
-        FAT(const std::vector<uint8_t> &fat_boot_data);
+        FAT(const std::vector<uint8_t> &fat_boot_data, std::ifstream &);
         FAT(std::ifstream &f, const uint32_t &pos_LBA);
         FAT& operator=(const FAT &fat);
     public:
@@ -77,6 +79,11 @@ class FAT{
 
         void show_volume_info();
         void set_attrs_from_boot_sector(const std::vector<uint8_t> &fat_boot_data);
+        void recoverAllFile(std::ifstream &f,const string&);
+        void recoverFileWithExt(std::ifstream &f, const string&, const std::string&);
+        void readDataAndWriteToFile(std::ifstream & fi, std::ofstream &fo, const uint32_t&, char*, const int &blockSize);
+        void listFile();
+        void tree();
 };
 
 #endif // !__VOLUME_FAT__

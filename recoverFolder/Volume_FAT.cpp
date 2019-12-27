@@ -1,14 +1,9 @@
 #include"Volume_FAT.h"
 
-FAT::FAT(){
-    this->helper = new Helper;
-}
-FAT::~FAT(){
-    delete this->helper;
-}
+FAT::FAT(){}
+FAT::~FAT(){}
 
 FAT::FAT(const FAT &fat){
-    this->helper = new Helper;
     int i;
     this->pos_begin_LBA = fat.pos_begin_LBA;
     for (i=0;i<3;++i){
@@ -38,23 +33,19 @@ FAT::FAT(const FAT &fat){
     }
     this->end_sector_marker = fat.end_sector_marker;
 }
-FAT::FAT(const std::vector<uint8_t> &fat_boot_data, std::ifstream &f){
-    this->helper = new Helper;
+FAT::FAT(const std::vector<uint8_t> &fat_boot_data){
     this->set_attrs_from_boot_sector(fat_boot_data);
-    this->treeDir = new TreeDIR(".", 0x10, this->get_begin_sector_RDET(), 0, 0, f, this->get_begin_sector_RDET(), this->get_bytes_per_sector(), this->get_begin_sector_data_area(), this->get_sectors_per_cluster());
 }
 FAT::FAT(std::ifstream &f, const uint32_t &pos_LBA){
-    this->helper = new Helper;
     this->pos_begin_LBA = pos_LBA;
     std::vector<char> ntfs_boot_data(512);
-    this->helper->dump_sector(f, ntfs_boot_data, this->pos_begin_LBA);
+    dump_sector(f, ntfs_boot_data, this->pos_begin_LBA);
     std::vector<uint8_t> boot_sector(512);
     for (int i=0;i<512;++i)
         boot_sector[i] = ntfs_boot_data[i];
     this->set_attrs_from_boot_sector(boot_sector);
 }
 FAT& FAT::operator=(const FAT &fat){
-    this->helper = new Helper;
     int i;
     this->pos_begin_LBA = fat.pos_begin_LBA;
     for (i=0;i<3;++i){
@@ -83,8 +74,6 @@ FAT& FAT::operator=(const FAT &fat){
         this->FAT_type[i] = fat.FAT_type[i];
     }
     this->end_sector_marker = fat.end_sector_marker;
-
-    return *this;
 }
 
 std::string FAT::get_OEMID(){
@@ -157,10 +146,10 @@ uint16_t FAT::get_end_sector_marker(){
 }
 uint32_t FAT::get_RDET_size() //sector
 {
-    return (this->get_entries_of_RDET()*32)/this->get_bytes_per_sector();
+    return (this->get_entries_of_RDET()*32)/512;
 }
 uint32_t FAT::get_begin_sector_RDET(){
-    return this->get_sectors_before_FAT_table()+this->get_sectors_of_FAT()*this->get_num_FAT_table();
+    return this->get_sectors_before_FAT_table()+this->get_sectors_of_FAT()*2;
 }
 uint32_t FAT::get_begin_sector_FAT_table(){
     return this->get_sectors_before_FAT_table();
@@ -220,70 +209,4 @@ void FAT::set_attrs_from_boot_sector(const std::vector<uint8_t> &fat_boot_data){
         this->FAT_type[i] = char(fat_boot_data[54+i]);
     }
     this->end_sector_marker = uint16_t((fat_boot_data[510]<<8)|fat_boot_data[511]);
-}
-
-void FAT::readDataAndWriteToFile(std::ifstream & fi, std::ofstream &fo, const uint32_t& numBytes, char *buf, const int &blockSize){
-    int block = numBytes / blockSize, byteOutBlock = numBytes % blockSize;
-    std::cout << "NumOfBlock = " << block << " - byteOutBlock = " << byteOutBlock << std::endl;
-    
-    for (int i=0;i<block;++i){
-        fi.read(buf, blockSize);
-        fo.write(buf, blockSize);
-    }
-    if (byteOutBlock != 0){
-        fi.read(buf, byteOutBlock);
-        fo.write(buf, byteOutBlock);
-    }
-}
-
-void FAT::recoverAllFile(std::ifstream &f, const string& pathStore){
-    std::vector<Component*> files = this->treeDir->getListDeletedFile();
-    int blockSize = this->sectors_per_cluster * this->bytes_per_sector;
-    char * buf = new char[blockSize];
-    std::string fullPath;
-
-    for (int i=0;i<files.size();++i){
-        fullPath = pathStore + "/" + files[i]->getName();
-        f.seekg((this->get_begin_sector_data_area()+(files[i]->getIndexClusterBegin()-2)*this->sectors_per_cluster)*this->bytes_per_sector);
-        std::ofstream fo(fullPath, std::ios::binary|std::ios::out);
-        if (!fo){
-            std::cout << "Create file " << files[i]->getName() << " error! Please, check path!" << std::endl;
-            exit(EXIT_FAILURE);
-        }else{
-            std::cout << "Recovering file ..... " << fullPath << std::endl;
-            this->readDataAndWriteToFile(f, fo, files[i]->getSize(), buf, blockSize);
-            std::cout << "Recover to file " << fullPath << " ====> Done." << std::endl;
-        }
-        fo.close();
-    }
-    std::cout << "Done. All!";
-}
-
-void FAT::recoverFileWithExt(std::ifstream &f, const string& pathStore, const std::string& ext_){
-    std::vector<Component*> files = this->treeDir->getListDeletedFileWithExt(ext_);
-    int blockSize = this->sectors_per_cluster * this->bytes_per_sector;
-    char * buf = new char[blockSize];
-    std::string fullPath;
-
-    for (int i=0;i<files.size();++i){
-        fullPath = pathStore + "/" + files[i]->getName();
-        f.seekg((this->get_begin_sector_data_area()+(files[i]->getIndexClusterBegin()-2)*this->sectors_per_cluster)*this->bytes_per_sector);
-        std::ofstream fo(fullPath, std::ios::binary|std::ios::out);
-        if (!fo){
-            std::cout << "Create file " << files[i]->getName() << " error! Please, check path!" << std::endl;
-            exit(EXIT_FAILURE);
-        }else{
-            std::cout << "Recovering file ..... " << fullPath << std::endl;
-            this->readDataAndWriteToFile(f, fo, files[i]->getSize(), buf, blockSize);
-            std::cout << "Recover to file " << fullPath << " ====> Done." << std::endl;
-        }
-        fo.close();
-    }
-    std::cout << "Done. All!";
-}
-void FAT::listFile(){
-    this->treeDir->listFile();
-}
-void FAT::tree(){
-    this->treeDir->show();
 }
