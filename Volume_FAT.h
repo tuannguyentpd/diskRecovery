@@ -76,7 +76,7 @@ class FAT{
         ** hoac S = begin_sector_data_area + (k-2)*sectors_per_cluster
         ** voi k la cluster bat dau cua file/directory
         */
-
+    public:
         void show_volume_info();
         void set_attrs_from_boot_sector(const std::vector<uint8_t> &fat_boot_data);
         void recoverAllFile(std::ifstream &f,const string&);
@@ -84,6 +84,11 @@ class FAT{
         void readDataAndWriteToFile(std::ifstream & fi, std::ofstream &fo, const uint32_t&, char*, const int &blockSize);
         void listFile();
         void tree();
+    public:
+        void dumSectorHexData(std::ifstream &f, const uint32_t &idx_sector);
+        void dumpClusterDataArea(std::ifstream &f, const uint32_t &idx_cluster);
+        void dumpRDETHexData(std::ifstream &f);
+        void showFATTableHexData(std::ifstream &f);
 };
 
 #endif // !__VOLUME_FAT__

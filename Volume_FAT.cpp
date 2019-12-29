@@ -243,20 +243,20 @@ void FAT::recoverAllFile(std::ifstream &f, const string& pathStore){
     std::string fullPath;
 
     for (int i=0;i<files.size();++i){
-        fullPath = pathStore + "/" + files[i]->getName();
+        fullPath = pathStore + "/" + std::to_string(i) + "_" + files[i]->getName();
         f.seekg((this->get_begin_sector_data_area()+(files[i]->getIndexClusterBegin()-2)*this->sectors_per_cluster)*this->bytes_per_sector);
         std::ofstream fo(fullPath, std::ios::binary|std::ios::out);
         if (!fo){
             std::cout << "Create file " << files[i]->getName() << " error! Please, check path!" << std::endl;
             exit(EXIT_FAILURE);
         }else{
-            std::cout << "Recovering file ..... " << fullPath << std::endl;
+            std::cout << "Recovering file \"" << files[i]->getName() << "\" to \"" << fullPath << "\"......." << std::endl;
             this->readDataAndWriteToFile(f, fo, files[i]->getSize(), buf, blockSize);
-            std::cout << "Recover to file " << fullPath << " ====> Done." << std::endl;
+            std::cout << "Recover to file \"" << fullPath << "\" ====> Done." << std::endl << std::endl;
         }
         fo.close();
     }
-    std::cout << "Done. All!";
+    std::cout << "Recovered " << files.size() << " files. Done - All!" << std::endl;
 }
 
 void FAT::recoverFileWithExt(std::ifstream &f, const string& pathStore, const std::string& ext_){
@@ -266,24 +266,49 @@ void FAT::recoverFileWithExt(std::ifstream &f, const string& pathStore, const st
     std::string fullPath;
 
     for (int i=0;i<files.size();++i){
-        fullPath = pathStore + "/" + files[i]->getName();
+        fullPath = pathStore + "/" + std::to_string(i) + "_" + files[i]->getName();
         f.seekg((this->get_begin_sector_data_area()+(files[i]->getIndexClusterBegin()-2)*this->sectors_per_cluster)*this->bytes_per_sector);
         std::ofstream fo(fullPath, std::ios::binary|std::ios::out);
         if (!fo){
             std::cout << "Create file " << files[i]->getName() << " error! Please, check path!" << std::endl;
             exit(EXIT_FAILURE);
         }else{
-            std::cout << "Recovering file ..... " << fullPath << std::endl;
+            std::cout << "Recovering file \"" << files[i]->getName() << "\" to \"" << fullPath << "\"......." << std::endl;
             this->readDataAndWriteToFile(f, fo, files[i]->getSize(), buf, blockSize);
-            std::cout << "Recover to file " << fullPath << " ====> Done." << std::endl;
+            std::cout << "Recover to file \"" << fullPath << "\" ====> Done." << std::endl << std::endl;
         }
         fo.close();
     }
-    std::cout << "Done. All!";
+    std::cout << "Recovered " << files.size() << " files. Done - All!" << std::endl;
 }
 void FAT::listFile(){
     this->treeDir->listFile();
 }
 void FAT::tree(){
     this->treeDir->show();
+}
+
+void FAT::dumSectorHexData(std::ifstream &f, const uint32_t &idx_sector){
+    std::vector<char> data(this->bytes_per_sector);
+    f.seekg(idx_sector * this->bytes_per_sector);
+    f.read(&data[0], this->bytes_per_sector);
+    this->helper->show_hex_data_dump(data, idx_sector);
+}
+void FAT::dumpClusterDataArea(std::ifstream &f, const uint32_t &idx_cluster){
+    std::vector<char> data(this->bytes_per_sector * this->sectors_per_cluster);
+    f.seekg((this->get_begin_sector_data_area()+(idx_cluster-2)*this->sectors_per_cluster)*this->bytes_per_sector);
+    f.read(&data[0], this->bytes_per_sector * this->sectors_per_cluster);
+    this->helper->show_hex_data_dump(data, this->get_begin_sector_data_area()+(idx_cluster-2)*this->sectors_per_cluster);
+}
+void FAT::dumpRDETHexData(std::ifstream &f){
+    std::vector<char> data(this->get_RDET_size() * this->bytes_per_sector);
+    f.seekg(this->get_begin_sector_RDET() * this->bytes_per_sector);
+    f.read(&data[0], this->get_RDET_size() * this->bytes_per_sector);
+    this->helper->show_hex_data_dump(data, this->get_begin_sector_RDET());
+}
+void FAT::showFATTableHexData(std::ifstream &f){
+    std::vector<char> data(get_sectors_of_FAT()* this->bytes_per_sector);
+    f.seekg(get_begin_sector_FAT_table() * this->bytes_per_sector);
+    f.read(&data[0], get_sectors_of_FAT() * this->bytes_per_sector);
+    this->helper->show_hex_data_dump(data, get_begin_sector_FAT_table());
 }

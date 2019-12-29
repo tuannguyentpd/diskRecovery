@@ -39,12 +39,19 @@ int main()
     
     char option;
     string ext = "";
+    int idx;
     while (true)
     {
         cout << "***************** OPTION *****************" << endl;
-        cout << "***************** 1: Recover all *****************" << endl;
-        cout << "***************** 2: Recover file: *****************" << endl;
-        cout << "***************** 3: Exist: *****************" << endl;
+        cout << "* 1: Recover all                         *" << endl;
+        cout << "* 2: Recover file                        *" << endl;
+        cout << "* 3: Dump sector hex data                *" << endl;
+        cout << "* 4: Show Volumn's Infomations           *" << endl;
+        cout << "* 5: Dump sector RDET hex data           *" << endl;
+        cout << "* 6: Dum cluster (data area) - hex data  *" << endl;
+        cout << "* 7: Dum FAT table hex data              *" << endl;
+        cout << "* 8: Exist                               *" << endl;
+        cout << "***************** OPTION *****************" << endl;
         
         std::cout << "Nhap lua chon: ";
         std::cin >> option;
@@ -61,6 +68,25 @@ int main()
             fat->recoverFileWithExt(file, "recoverFolder", ext);
             break;
         case '3':
+            std::cout << "Nhap so thu tu sector: ";
+            std::cin >> idx;
+            fat->dumSectorHexData(file, idx);
+            break;
+        case '4':
+            fat->show_volume_info();
+            break;
+        case '5':
+            fat->dumpRDETHexData(file);
+            break;
+        case '6':
+            std::cout << "Nhap so thu tu cluster trong vung data: ";
+            std::cin >> idx;
+            fat->dumpClusterDataArea(file, idx);
+            break;
+        case '7':
+            fat->showFATTableHexData(file);
+            break;
+        case '8':
             exit(EXIT_SUCCESS);
             break;
         default:
