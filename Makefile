@@ -12,9 +12,9 @@ TARGETS := $(patsubst %.h,%.so,$(SRCS))
 #all: $(TARGETS) main
 #all: main CPPlib.so run_console_output
 #all: main CPPlib.so run_redirect_ouput_to_file
-all: main run_redirect_ouput_to_file
+#all: main run_redirect_ouput_to_file
 # all: main run_console_output
-# all: main
+all: main
 
 %.so:%.o
 	$(CC) $(INC) $(LDFLAGS) $(CFLAGS) -o $@ $^
@@ -35,4 +35,4 @@ Wrapping:
 	g++ -o Wrapper.so Wrapper.cpp -std=c++11 -fPIC -shared -Wall -Wextra `python3.6-config --includes --libs` -lboost_python3
 
 clean:
-	$(RM) $(PWD)/*.so $(PWD)/*.o main *.out
+	$(RM) $(PWD)/*.so $(PWD)/*.o main *.oute b8 20
